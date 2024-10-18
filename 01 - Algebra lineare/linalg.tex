@@ -1,0 +1,290 @@
+\documentclass{article}
+
+\title{Metodi Numerici per l'Informatica}
+\author{Anthony}
+\date{28 feb 2023}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+\newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+
+\begin{document}
+    \maketitle
+
+    \section{Spazi Vettoriali}
+        Uno spazio vettoriale $V$ è un insieme che dispone di un'operazione additiva e una somma scalare e gode delle 
+        seguenti proprietà:
+        \begin{itemize}
+            \item \textbf{Commutatività:} $u+v = v+u$ $\forall u,v \in V$. Inoltre $u+v \in V$
+            \item \textbf{Associatività:} $(u+v)+w = u + (v+w)$ e $(ab)v = a(bv)$ $\forall u,v,w \in V$ e $\forall a,b \in 
+            \mathbb{R}$. Inoltre, $av \in V$\
+            \item \textbf{Identità additiva:} $\exists 0 \in V$ tale che $v+0=v$ $\forall v \in V$
+            \item \textbf{Inverso additivo:} $\forall v \in V, \exists w \in V$ tale che $v+w=0$
+            \item \textbf{Identità moltiplicativa:} $1v = v$ $\forall v \in V$
+            \item \textbf{Proprietà distributive:} $a(u+v)= au+av$ e $(a+b)v = av+bv$ $\forall a,b \in \mathbb{R}, u,v \in V$
+        \end{itemize}
+        \textbf{Oss:} In uno spazio vettoriale non è definito il prodotto tra vettori.
+        \subsection{Esempi di spazi vettoriali}
+            \paragraph{Liste di numeri}
+                Sia $\mathbb{R}^n$ l'insieme di tutte le sequenze di numeri in $\mathbb{R}$ lunghe $n$:
+                \[\mathbb{R}^n = \{ (x_1, \dots, x_n) : x_j \in \mathbb{R} \texttt{ } \forall j \in [n] \} \]
+                Addizione e moltiplicazione sono definite come possiamo aspettarci:
+                \[(x_1, x_2, \dots, x_n) + (y_1, y_2, \dots, y_n) = (x_1 + y_1, x_2 + y_2, \dots, x_n+y_n)\]
+                \[\lambda(x_1,x_n, \dots, x_n) = (\lambda x_1, \lambda x_2, \dots, \lambda x_n)\]
+                L'identità additiva è rappresentata dalla sequenza composta da tutti zero:
+                \[ 0 = (0, \dots, 0)\]
+            \paragraph{Funzioni}
+                Consideriamo l'insieme di tutte le funzioni $f : [0,1] \to \mathbb{R}$ con la definizione standard per somma e prodotto 
+                scalare:
+                \[(f+g)(x) = f(x)+g(x), \forall x \in [0,1] \]
+                \[(\lambda f)(x) = \lambda f(x), \forall x \in [0,1] \]
+                Tale insieme con le sue operazioni forma uno spazio vettoriale. Difatti, \emph{ogni} insieme di funzioni $f:S \to \mathbb{R}$
+                con $S \neq \emptyset$ e le due operazioni e definizioni descritte sopra forma uno spazio vettoriale.
+            \paragraph{Non-esempio: superfici curve}
+                Le superfici di per sé non formano uno spazio vettoriale perché, ad esempio, non rispetta la chiusura 
+                delle operazioni: la somma delle coordinate di due punti potrebbe generare un punto esterno rispetto alla superficie.
+        \subsection{I vettori}
+            Gli elementi di uno spazio vettoriale sono chiamati \emph{vettori} e non sono necessariamente liste. Un vettore è 
+            un'entità astratta i cui elementi possono essere liste, funzioni, o altri oggetti.
+        \subsection{Sottospazi}
+            Un sottoinsieme $U \subset V$ è un \emph{sottospazio} di $V$ se è esso stesso uno spazio vettoriale. In particolare:
+            \begin{itemize}
+                \item $0 \in u$
+                \item $u,v \in U \implies u+v \in U$
+                \item $u \in U \implies \alpha u \in U$ $\forall \alpha \in \mathbb{R}$
+            \end{itemize}
+            \paragraph{Esempio}
+            $\{(x_1, x_2, 0) : x_1,x_2 \in \mathbb{R}\}$ è un sottospazio di $\mathbb{R}^3$.
+        \subsection{Basi di spazi vettoriali}
+            Una base di $V$ è una collezione di vettori in $V$ che sono \emph{linearmente indipendenti} e sono lo \emph{span} di $V$.
+            \[span(v_1, \dots, v_n) = \{ a_1v_1 + \dots a_nv_n : a_1, \dots a_n \in \mathbb{R} \} \]
+            $v_1,\dots,v_n$ sono linearmente indipendenti se e solo se ogni $v \in span(v_1, \dots, v_n)$ ha un'unica rappresentazione
+            come combinazione lineare di $v_1, \dots, v_n$. Quindi ogni vettore $v \in V$ può essere espresso univocamente come combinazione 
+            lineare.
+            \[v = \sum_{i=1}^{n}\alpha_iv_i\]
+            Una base non è altro che un insieme \emph{minimale} che genera tutto lo spazio $V$.
+            \paragraph{Esempi di basi}
+            \begin{itemize}
+                \item $(1,0,\dots,0), (0,1,\dots,0), \dots, (0,\dots,0,1)$ è una base di $\mathbb{R}^n$ chiamata \emph{base canonica}
+                e i suoi vettori sono chiamati \emph{vettori indicatori}.
+                \item $(1,2),(3,5.07)$ è una base di $\mathbb{R}^2$
+                \item $f_1(x) = \begin{cases}
+                    1 & \text{se }x=x_1 \\
+                    0 & \text{altrimenti}
+                \end{cases}
+                ;
+                f_2(x) = \begin{cases}
+                    1 & \text{se }x=x_2 \\
+                    0 & \text{altrimenti}
+                \end{cases}
+                \dots$\\
+                è la base canonica dell'insieme delle funzioni $f:\mathbb{R} \to \mathbb{R}$ e i suoi vettori sono chiamati \emph{funzioni 
+                indicatrici}.
+            \end{itemize}
+        \subsection{Dimensioni}
+            Uno spazio vettoriale può avere basi differenti. \textbf{Teorema:} siano $B_1, B_2$ due basi di $V$, $B_1$ e $B_2$ hanno necessariamente 
+            lo stesso numero di vettori. \\
+            Una \emph{dimensione} di uno spazio vettoriale (con dimensioni finite) è la lunghezza 
+            di qualsiasi base dello spazio vettoriale.
+        \subsection{Mappa lineare}
+            Una \emph{mappa lineare} da $V$ a $W$ è una funzione $T: V \to W$ con le seguenti proprietà:
+            \begin{itemize}
+                \item \textbf{Additività:} $T(u+v) = Tu+Tv$ $\forall u,v \in V$
+                \item \textbf{Omogeneità:} $T(\lambda v) = \lambda(Tv)$ $\forall \lambda \in \mathbb{R}, \forall v \in V$
+            \end{itemize}
+            \paragraph{Esempi}
+            \begin{enumerate}
+                \item[--] \textbf{Identità} $I : V \to V$, definita come $Iv=v$
+                \item[--] \textbf{Differenziazione} $D:\mathcal{F}(\mathbb{R}) \to \mathcal{F}(\mathbb{R})$, definita come $Df=f'$
+                \item[--] \textbf{Integrazione} $T:\mathcal{F}(\mathbb{R}) \to \mathbb{R}$, definita come $Tf=\int_{0}^{1}f(x)dx$
+                \item[--] \textbf{Mappa generica} $T : \mathbb{R}^n \to \mathbb{R}^m$ definita come \\$T(x_1, \dots, x_n) = (A_{1,1}x_1 + \dots 
+                + A_{1,n}x_n + \dots + A_{m,1}x_1 + \dots + A_{m,n}x_n)$
+                \item[--] \textbf{Non-esempio -- equazione di una retta:} $y=ax+b$ non è lineare perché, ad esempio, l'omogeneità non è 
+                soddisfatta.
+                \item[--] \textbf{Equazione:} $y= z\sin x + z^2 \sin(x)$ \emph{non} è lineare rispetto a $z,x$, ma è lineare rispetto 
+                alla funzione seno in cui $z,x$ sono coefficienti.
+            \end{enumerate}
+            \paragraph{Mappe lineari come spazio vettoriale}
+                Le mappe lineri $T : V \to W$ formano uno spazio vettoriali con le operazioni di addizione e moltiplicazione definite come:
+                \[(S+T)(v) = Sv+Tv\]
+                \[(\lambda T)(v) = \lambda(Tv) \]
+                Le mappe lineari ammettono anche una definizione di prodotto tra esse. In generale, non ha senso moltiplicare vettori;
+                non è altro che la composizione di mappe lineari: siano $T: U \to V$ e $S:V \to W$, il loro prodotto $ST: U \to W$ è definito
+                come segue:
+                \[(ST)(u) = S(Tu)\]
+            \paragraph{Proprietà algebriche delle mappe lineari}
+                \begin{itemize}
+                    \item \textbf{Associatività:} $(T_1T_2)T_3 = T_1(T_2T_3)$
+                    \item \textbf{Identità:} $TI = IT = T$
+                    \item \textbf{Proprietà distributive:} $(S_1+S_2)T = S_1T + S_2T$ e $S(T_1 + T_2) = ST_1+ST_2$
+                \end{itemize}
+                È da tenere a mente che le mappe lineari, a parte casi particolari, \textbf{non sono commutative}: $ST \neq TS$.
+        \subsection{Matrici}
+            Le matrici sono un modo comodo per rappresentare le mappe lineari. Chiamiamo $\mathbb{R}^{m \times n}$
+            lo spazio vettoriale di tutte le matrici $m \times n$ con valori in $\mathbb{R}$. Consideriamo la mappa lineare $T:V \to W$, una 
+            base $v_1, \dots, v_n \in V$ e una base $w_1, \dots, w_m \in W$. 
+            La matrice di $T$ $m \times n$ di valori in $\mathbb{R}$ è una rappresentazione della mappa lineare di $T$:
+                \[T = \begin{pmatrix}
+                T_{1,1} & \dots & T_{1,n}\\
+                \vdots & & \vdots \\
+                T_{m,1} & \dots & T_{m,n}
+                \end{pmatrix}\]
+            le cui celle $T_{i,j}$ sono definite come segue:
+            \[ T_{v_j} = T_{1,j}w_1 + \dots + T_{m,j}w_m\]
+            La matrice codifica come le basi dei vettori sono mappate, e questo è sufficiente per mappare tutti i vettori 
+            nel loro span, per cui:
+            \[Tv = T(\sum_j \alpha_j v_j) = \sum_j T(\alpha_jv_j) = \sum_j \alpha_jTv_J\]
+            Una matrice quindi è una rappresentazione di una mappa lineare, ed essa \emph{dipende} dalla scelta delle basi.
+            \paragraph{Matrice di un vettore} un vettore è un elemento dello spazio vettoriale e, data una base, ha una propria 
+            rappresentazione. Sia $v$ un vettore
+                \[v = \begin{pmatrix}
+                    c_1 \\
+                    \vdots \\
+                    c_n
+                    \end{pmatrix}\]
+            e sia $B = \begin{pmatrix}
+                v_1 \\
+                \vdots \\
+                v_n
+                \end{pmatrix}$ una base di $V$, allora
+                \[v=c_1v_1 +\dots + c_nv_n\]
+            Ancora: la matrice \emph{dipende} dalla base di $V$.
+        \subsection{Prodotto matrici e vettori}
+            Il prodotto tra matrici e vettori è definito come segue
+                \[
+                    \begin{pmatrix}
+                        T_{1,1} & \dots & T_{1,n}\\
+                        \vdots & & \vdots \\
+                        T_{m,1} & \dots & T_{m,n}
+                    \end{pmatrix} 
+                    \begin{pmatrix}
+                        c_1 \\
+                        \vdots \\
+                        c_n
+                    \end{pmatrix} = \sum_{j=1}^n c_j 
+                    \begin{pmatrix} \color{red}
+                        T_{1,j} \\
+                        \color{red} \vdots \\
+                        \color{red} T_{m,j}
+                    \end{pmatrix}
+                \]
+            in cui sia la matrice che il vettore sono rappresentati dalla stessa base. Sia essa $W = (w_1, \dots, w_n)$, allora:
+            \[T_{v_j} = \textcolor{red}{T_{1,j}}w_1 + \dots + \textcolor{red}{T_{m,j}}w_m\]
+            Possiamo osservare di come un vettore $c = \sum_j c_jv_j$ sia mappato a $Tc = \sum_j c_jTv_j$.
+        \subsection{Algebra matriciale}
+            Abbiamo osservato che le mappe lineari formano uno spazio vettoriale in cui le matrici, essendo rappresentazioni di mappe 
+            lineari, formano uno spazio vettoriale. Quindi possiamo definire somma e prodotto:
+            \begin{itemize}
+                \item \textbf{Somma:} La matrice $S+T$ può essere ottenuta sommando le matrici $S,T$. Le matrici, per far sì che 
+                    l'operazione abbia senso, devono avere la stessa base.
+                \item \textbf{Moltiplicazione per scalare:} dato $\lambda \in \mathbb{R}$, la matrice $\lambda T$ è data da 
+                    $\lambda$ volte la matrice $T$.
+                \item \textbf{Prodotto:} la matrice $ST$ è ottenibile dal prodotto matriciale tra $S$ e $T$. Il prodotto tra matrici non è 
+                    commutativo come non lo è quello tra mappe lineari. Anche qui, il prodotto tra matrici ha senso solo se le due matrici 
+                    condividono la stessa base.
+            \end{itemize}
+    \section{Manipolazione di matrici}
+        \subsection{Trasposta e inversa}
+            Una matrice è simmetrica se 
+                \[\mathbf{A}=\mathbf{A}^T\] 
+            Se la matrice è un prodotto del tipo $\mathbf{A} = \mathbf{BC}$, la trasposta si applica come segue:
+                \[(\mathbf{BC})^T = \mathbf{C}^T\mathbf{B}^T\]
+            Lo stesso vale per l'inversa:
+                \[(\mathbf{BC})^{-1} = \mathbf{C}^{-1}\mathbf{B}^{-1}\]
+            Una matrice $\mathbf{A}$ è \emph{ortogonale} se:
+                \[\mathbf{A}^{-1} = \mathbf{A}^T\]
+            Per cui $\mathbf{A}^T\mathbf{A} = \mathbf{I}$ se $\mathbf{A}$ è ortogonale.
+        \subsection{Prodotti}
+            \paragraph{Prodotto matrice-vettore}
+                Il prodotto matrice-vettore è come segue:
+                \[ \mathbf{Xy} = 
+                        \begin{pmatrix}
+                            \vline          & \vline        & \\
+                            \mathbf{x_1}    & \mathbf{x_2}  & \dots \\
+                            \vline          & \vline       & \\
+                        \end{pmatrix}
+                        \begin{pmatrix}
+                            y_1 \\
+                            y_2 \\
+                            \vdots
+                        \end{pmatrix} 
+                        =
+                        y_1 \begin{pmatrix}
+                            \vline \\
+                            \mathbf{x_1} \\
+                            \vline
+                        \end{pmatrix}
+                        +
+                        y_2 \begin{pmatrix}
+                            \vline \\
+                            \mathbf{x_2} \\
+                            \vline
+                        \end{pmatrix}
+                        +
+                        \dots \]
+            \paragraph{Prodotto vettore-matrice}
+                Il prodotto vettore-matrice è semplicemente la trasposta del prodotto matrice-vettore:
+                        \[\mathbf{z}^T\mathbf{A} = (\mathbf{A}^T\mathbf{z})^T\]
+            \paragraph{Prodotto matrice-matrice}
+                Il prodotto matrice-matrice è definito come segue:
+                \[ \mathbf{XY} = 
+                        \begin{pmatrix}
+                                \horzbar     & \mathbf{x_1}^T        &  \horzbar \\
+                                \horzbar    & \mathbf{x_2}^T        &   \horzbar\\
+                                            & \vdots      & \\
+                        \end{pmatrix}
+                        \begin{pmatrix}
+                            \vline          & \vline        & \\
+                            \mathbf{y_1}    & \mathbf{y_2}  & \dots \\
+                            \vline          & \vline       & \\
+                        \end{pmatrix}
+                    =
+                        \begin{pmatrix}
+                            & \dots & \\
+                            \vdots & \mathbf{x}_i^T\mathbf{y}_j & \vdots \\
+                            & \dots &
+                        \end{pmatrix}
+                    \]
+            \paragraph{Prodotto vettore-vettore}
+                Di due tipi: \emph{scalare} ed \emph{esterno}.
+                \subparagraph{Prodotto scalare (inner product)}
+                    \[\mathbf{x}^T\mathbf{y} = \alpha \]
+
+                \subparagraph{Prodotto esterno (outer product)}
+                    \[\mathbf{x}\mathbf{y}^T = 
+                    \begin{pmatrix}
+                        x_1 \\
+                        x_2 \\
+                        \vdots
+                    \end{pmatrix}
+                    \begin{pmatrix}
+                        y_1 & y_2 & \dots
+                    \end{pmatrix} =
+                    \begin{pmatrix}
+                        \vline          & \vline        & \\
+                        y_1\mathbf{x}   & y_2\mathbf{x}  & \dots \\
+                        \vline          & \vline       & \\
+                    \end{pmatrix}
+                    \]
+    \section{Traccia}
+        La traccia di una matrice $\mathbf{A}$ è la somma degli elementi sulla sua diagonale:
+            \[tr(\mathbf{A}) = \sum_i a_{ii} \]
+        La traccia è una mappa lineare poiché soddisfa le proprietà delle mappe lineari:
+            \[tr(\mathbf{A} + \mathbf{B}) = tr(\mathbf{A}) + tr(\mathbf{B})\]
+            \[tr(\alpha\mathbf{A}) = \alpha tr\mathbf{A} \]
+        L'operazione traccia inoltre è invariante alla trasposta e alle permutazioni cicliche:
+            \[tr(\mathbf{A}) = tr(\mathbf{A}^T)\]
+            \[tr(\mathbf{ABC}) = tr(\mathbf{CAB}) = tr(\mathbf{BCA})\]
+
+    \section{Un vettore importante: il vettore di uno}
+        Un vettore $\mathbf{1}$ composto da tutti uno può essere usato per calcolare le somme efficientemente. Ad esempio, 
+        per calcolare gli elementi di $\mathbf{A}$ sulle righe possiamo effettuare il seguente prodotto:
+                    \[\mathbf{A1}\]
+        Invece se vogliamo sommare sulle colonne:
+                    \[\mathbf{1}^T\mathbf{A} = (\mathbf{A}^T\mathbf{1})^T\]
+        E, infine, se vogliamo sommare su tutti gli elementi di $\mathbf{A}$:
+                    \[\mathbf{1}^T\mathbf{A1}\]
+                
+\end{document}
